@@ -1,0 +1,22 @@
+{
+    "name": "abbadon1334/atk4-token",
+    "type": "package",
+    "description": "Agile Toolkit Token",
+    "homepage": "https://github.com/abbadon1334/atk4-token",
+    "license": "MIT",
+    "keywords": ["Token", "Agile Toolkit", "Atk4"],
+    "authors": [{
+        "email": "fdanti@gmail.com",
+        "name": "Francesco Danti"
+    }],
+    "require": {
+        "php" : ">=7.4.0",
+        "atk4/data": "2.4.0",
+        "ramsey/uuid": "^4.1"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Abbadon1334\\Token\\" : "src/"
+        }
+    }
+}
