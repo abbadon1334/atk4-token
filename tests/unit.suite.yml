@@ -1,0 +1,15 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit or integration tests.
+
+actor: UnitTester
+modules:
+    enabled:
+        - Asserts
+        - \Helper\Unit
+        - Db:
+            dsn: 'sqlite:tests/_data/sqlite.db'
+            user: ''
+            password: ''
+            cleanup: true
+    step_decorators: ~
