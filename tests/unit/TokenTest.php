@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Abbadon1334\Token;
 
-
-use Atk4\Data\Exception;
 use Atk4\Data\Persistence;
 use Atk4\Data\Schema\Migrator;
 
@@ -24,7 +24,8 @@ class TokenTest extends \Codeception\Test\Unit
         $migrator->dropIfExists()->create();
     }
 
-    private function getModel() : Token {
+    private function getModel(): Token
+    {
         return new Token(self::$persistence);
     }
 
@@ -35,7 +36,7 @@ class TokenTest extends \Codeception\Test\Unit
         $token1 = $model->getNewToken('test', null, 10);
         $token2 = $model->getNewToken('test2', null, 10);
 
-        $this->assertNotEquals($token1->get('code'), $token2->get('code'));
+        $this->assertNotSame($token1->get('code'), $token2->get('code'));
     }
 
     public function testLoadByTypeAndCode()
@@ -68,14 +69,13 @@ class TokenTest extends \Codeception\Test\Unit
         $this->assertTrue($token->isExpired());
     }
 
-
     public function testGetValue()
     {
         $model = $this->getModel();
         $token = $model->getNewToken('test', 'test-value');
 
         $token->set('value', [
-            'key' => 'value'
+            'key' => 'value',
         ]);
 
         $token->save();
@@ -83,21 +83,21 @@ class TokenTest extends \Codeception\Test\Unit
         $model = $this->getModel();
         $entity = $model->loadByTypeAndCode('test', 'test-value');
 
-        $this->assertEquals('value', $entity->get('value')['key']);
+        $this->assertSame('value', $entity->get('value')['key']);
     }
 
     public function testPrune()
     {
         $model = $this->getModel();
-        $model->addCondition('expire', "<", new \DateTime());
+        $model->addCondition('expire', '<', new \DateTime());
 
         $this->assertGreaterThan(0, (int) $model->action('count')->getOne());
 
         $this->getModel()->pruneExpired();
 
         $model = $this->getModel();
-        $model->addCondition('expire', "<", new \DateTime());
+        $model->addCondition('expire', '<', new \DateTime());
 
-        $this->assertEquals(0, (int) $model->action('count')->getOne());
+        $this->assertSame(0, (int) $model->action('count')->getOne());
     }
 }

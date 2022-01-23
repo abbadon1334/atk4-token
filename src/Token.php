@@ -27,6 +27,7 @@ class Token extends Model
     {
         $this->addCondition('type', $type);
         $this->addCondition('code', $code);
+
         return $this->tryLoadOne();
     }
 
@@ -46,7 +47,7 @@ class Token extends Model
             throw new Exception('Token $type must be not empty');
         }
 
-        if ($code !== null && empty($code)) {
+        if (null !== $code && empty($code)) {
             throw new Exception('Token $code must be null or not empty');
         }
 
@@ -69,11 +70,11 @@ class Token extends Model
         return Uuid::uuid4()->toString();
     }
 
-    public function pruneExpired() {
-
+    public function pruneExpired()
+    {
         $model = new static($this->persistence);
-        $model->addCondition('expire', "<", new DateTime());
-        foreach($model->getIterator() as $m) {
+        $model->addCondition('expire', '<', new DateTime());
+        foreach ($model->getIterator() as $m) {
             $m->delete();
         }
     }
