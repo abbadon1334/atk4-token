@@ -72,9 +72,9 @@ class Token extends Model
     public function pruneExpired() {
 
         $model = new static($this->persistence);
-        $model->addCondition('expire', "<", $this->persistence->exprNow());
-        $model->each(function(Token $m) {
+        $model->addCondition('expire', "<", new DateTime());
+        foreach($model->getIterator() as $m) {
             $m->delete();
-        });
+        }
     }
 }

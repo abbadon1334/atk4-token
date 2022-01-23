@@ -10,20 +10,22 @@ use Atk4\Data\Schema\Migrator;
 class TokenTest extends \Codeception\Test\Unit
 {
     private Token $model;
-    private Persistence $persistence;
+    private static ?Persistence $persistence = null;
 
-    protected function _before()
+    public static function setUpBeforeClass(): void
     {
-        parent::_before();
+        parent::setUpBeforeClass();
 
-        $this->persistence = new \Atk4\Data\Persistence\Sql('sqlite:tests/_data/sqlite.db');
+        self::$persistence = new \Atk4\Data\Persistence\Sql('sqlite:tests/_data/sqlite.db');
 
-        $migrator = new Migrator($this->getModel());
+        $model = new Token(self::$persistence);
+
+        $migrator = new Migrator($model);
         $migrator->dropIfExists()->create();
     }
 
     private function getModel() : Token {
-        return new Token($this->persistence);
+        return new Token(self::$persistence);
     }
 
     public function testGetNewToken()
@@ -82,5 +84,20 @@ class TokenTest extends \Codeception\Test\Unit
         $entity = $model->loadByTypeAndCode('test', 'test-value');
 
         $this->assertEquals('value', $entity->get('value')['key']);
+    }
+
+    public function testPrune()
+    {
+        $model = $this->getModel();
+        $model->addCondition('expire', "<", new \DateTime());
+
+        $this->assertGreaterThan(0, (int) $model->action('count')->getOne());
+
+        $this->getModel()->pruneExpired();
+
+        $model = $this->getModel();
+        $model->addCondition('expire', "<", new \DateTime());
+
+        $this->assertEquals(0, (int) $model->action('count')->getOne());
     }
 }
