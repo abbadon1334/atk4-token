@@ -20,16 +20,14 @@ class Token extends Model
         $this->addField('type');
         $this->addField('code');
         $this->addField('expire', ['type' => 'datetime']);
-        $this->addField('value', ['serialize' => 'serialize']);
+        $this->addField('value', ['type' => 'json']);
     }
 
     public function loadByTypeAndCode(string $type, string $code): self
     {
         $this->addCondition('type', $type);
         $this->addCondition('code', $code);
-        $this->tryLoadAny();
-
-        return $this;
+        return $this->tryLoadOne();
     }
 
     public function deleteByTypeAndCode(string $type, string $code): void
@@ -56,10 +54,10 @@ class Token extends Model
             throw new Exception('Token $expire must be greater than zero');
         }
 
-        $model = new static($this->persistence);
+        $model = $this->createEntity();
         $model->set('type', $type);
         $model->set('code', $code ?? $this->generateUuid());
-        $model->set('expire', (new Datetime())->modify('+' . $expireInSeconds . ' SECONDS')->format('Y-m-d H:i:s'));
+        $model->set('expire', (new Datetime())->modify('+' . $expireInSeconds . ' SECONDS'));
         $model->set('value', $value);
         $model->save();
 
@@ -69,5 +67,14 @@ class Token extends Model
     protected function generateUuid(): string
     {
         return Uuid::uuid4()->toString();
+    }
+
+    public function pruneExpired() {
+
+        $model = new static($this->persistence);
+        $model->addCondition('expire', "<", $this->persistence->exprNow());
+        $model->each(function(Token $m) {
+            $m->delete();
+        });
     }
 }
