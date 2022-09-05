@@ -23,7 +23,7 @@ class Token extends Model
         $this->addField('value', ['type' => 'json']);
     }
 
-    public function loadByTypeAndCode(string $type, string $code): self
+    public function loadByTypeAndCode(string $type, string $code): ?self
     {
         $this->addCondition('type', $type);
         $this->addCondition('code', $code);
@@ -72,7 +72,7 @@ class Token extends Model
 
     public function pruneExpired()
     {
-        $model = new static($this->persistence);
+        $model = new static($this->getPersistence());
         $model->addCondition('expire', '<', new DateTime());
         foreach ($model->getIterator() as $m) {
             $m->delete();

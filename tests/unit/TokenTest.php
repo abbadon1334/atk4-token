@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Abbadon1334\Token;
+namespace Abbadon1334\TokenTests\Unit;
 
+use Abbadon1334\Token\Token;
 use Atk4\Data\Persistence;
 use Atk4\Data\Schema\Migrator;
 
@@ -59,7 +60,7 @@ class TokenTest extends \Codeception\Test\Unit
         $model = $this->getModel();
         $entity = $model->loadByTypeAndCode('test', 'delete');
 
-        $this->assertFalse($entity->isLoaded());
+        $this->assertNull($entity);
     }
 
     public function testIsExpired()

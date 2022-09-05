@@ -4,6 +4,7 @@
     "description": "Agile Toolkit Token",
     "homepage": "https://github.com/abbadon1334/atk4-token",
     "license": "MIT",
+    "minimum-stability": "dev",
     "keywords": [
         "Token",
         "Agile Toolkit",
@@ -17,12 +18,13 @@
     ],
     "require": {
         "php": ">=7.4",
-        "atk4/data": "3.1.0",
+        "atk4/data": "dev-develop",
         "ramsey/uuid": "4.2.3"
     },
     "autoload": {
         "psr-4": {
-            "Abbadon1334\\Token\\": "src/"
+            "Abbadon1334\\Token\\": "src/",
+            "Abbadon1334\\TokenTests\\Unit\\": "tests/unit"
         }
     },
     "require-dev": {
