@@ -29,7 +29,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "3.5.0",
-        "codeception/codeception": "4.1.28",
+        "codeception/codeception": "5.1.2",
         "codeception/module-phpbrowser": "1.0.2",
         "codeception/module-asserts": "2.0.1",
         "codeception/module-db": "2.0.0"
